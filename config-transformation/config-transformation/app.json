@@ -1,0 +1,8 @@
+{
+  "value1": "value",
+  "value2": {
+    "value21": 1,
+    "value22": true,
+    "value23": "value23"
+  }
+}
