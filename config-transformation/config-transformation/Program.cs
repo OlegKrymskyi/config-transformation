@@ -39,8 +39,8 @@ namespace config_transformation
             {
                 var template = Template.Parse(File.ReadAllText(file));
 
-                var output = template.Render(Hash.FromAnonymousObject(configObj));
-                using (var fs = new FileStream(Path.GetFileNameWithoutExtension(file), FileMode.Create, FileAccess.Write))
+                var output = template.Render(Hash.FromDictionary(configObj));
+                using (var fs = new FileStream(Path.Combine(Path.GetDirectoryName(file), Path.GetFileNameWithoutExtension(file)), FileMode.Create, FileAccess.Write))
                 {
                     using (var writter = new StreamWriter(fs))
                     {
