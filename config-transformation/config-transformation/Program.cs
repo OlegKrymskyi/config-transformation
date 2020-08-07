@@ -23,19 +23,9 @@ namespace config_transformation
 
             configuration = builder.Build();
 
-            if (args.Length == 0)
-            {
-                Console.WriteLine("The path to the folder with the templates which must be processed is not specified");
-            }
-
-            if (!Directory.Exists(args[0])) 
-            {
-                Console.WriteLine("Invalid path to the templates which must be processed");
-            }
-
             var configObj = GetConfigurationObject(configuration);
 
-            foreach (var file in Directory.GetFiles(args[0], "*.template", SearchOption.AllDirectories))
+            foreach (var file in Directory.GetFiles(Directory.GetCurrentDirectory(), "*.template", SearchOption.AllDirectories))
             {
                 var template = Template.Parse(File.ReadAllText(file));
 
@@ -60,6 +50,8 @@ namespace config_transformation
                 var parent = result as IDictionary<string, object>;
                 var path = kvp.Key.Split(':');
 
+                Console.WriteLine($"Params: {kvp.Key}={kvp.Value}");
+
                 // create or retrieve the hierarchy (keep last path item for later)
                 var i = 0;
                 for (i = 0; i < path.Length - 1; i++)
@@ -78,6 +70,11 @@ namespace config_transformation
                 // add the value to the parent
                 // note: in case of an array, key will be an integer and will be dealt with later
                 var key = path[i];
+                if (key.StartsWith("env.")) 
+                {
+                    key = key.Substring(4);
+                }
+
                 parent.Add(key, kvp.Value);
             }
 
